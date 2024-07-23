@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "name": "Site HTML inspector",
+  "short_name": "Site spider",
+  "description": "This extension provides a search to find HTML content, like class names etc.",
+  "homepage_url": "https://github.com/clanceyp/",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "options_page": "options/index.html",
+  "icons": {
+	"48": "/lib/i/48.png",
+    "128": "/lib/i/128.png"
+  },
+  "action": {
+    "default_icon" : "/lib/i/48.png",
+    "default_title": "Search HTML"
+  }
+}

@@ -1,0 +1,153 @@
+/* TODO; refactor after customElements polyfill has been done */
+div[is="site-spider-div"] {
+    background-color: #151515 !important;
+    border: 0 none !important;
+    border-radius: 3px !important;
+    box-shadow: -5px 5px 15px black !important;
+    color: white !important;
+    display: block !important;
+    font-family: sans-serif !important;
+    font-size: .8rem !important;
+    left: 20px;
+    padding: 20px 0 40px 0 !important;
+    position: fixed !important;
+    transition: opacity 300ms;
+    top: 20px;
+    width: max-content !important;
+    z-index: 9999999 !important;
+}
+div[is="site-spider-div"].spider-dragging {
+    opacity: 0.7;
+}
+div[is="site-spider-div"] header {
+    cursor: move;
+}
+div[is="site-spider-div"] h2 {
+    border: 0 none !important;
+    font-size: 2rem !important;
+}
+div[is="site-spider-div"] h2 svg {
+    position: absolute;
+}
+div[is="site-spider-div"] main {
+    margin-right: 12px;
+    max-height: 60vh !important;
+    overflow-x: hidden !important;
+    overflow-y: scroll !important;
+    scrollbar-color: #6b6b6b #2c2c2c !important;
+    scrollbar-width: thin !important;
+}
+/* utils */
+div[is="site-spider-div"] .m-null {
+    margin: 0 !important;
+}
+div[is="site-spider-div"] .p-null {
+    padding: 0 !important;
+}
+div[is="site-spider-div"] .p-small {
+    padding: 8px !important;
+}
+div[is="site-spider-div"] .p-medium {
+    padding: 16px !important;
+}
+div[is="site-spider-div"] .py-small {
+    padding-bottom: 8px !important;
+    padding-top: 8px !important;
+}
+div[is="site-spider-div"] .py-medium {
+    padding-bottom: 16px !important;
+    padding-top: 16px !important;
+}
+div[is="site-spider-div"] .px-small {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+div[is="site-spider-div"] .px-medium {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+div[is="site-spider-div"] .mx-medium {
+    margin-left: 16px !important;
+    margin-right: 16px !important;
+}
+div[is="site-spider-div"] .txt-c {
+    text-align: center;
+}
+/* table styles */
+div[is="site-spider-div"] .table {
+    table-layout: auto;
+}
+div[is="site-spider-div"] td,
+div[is="site-spider-div"] th {
+    color: white !important;
+    font-size: .8rem !important;
+    font-weight: normal !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+}
+div[is="site-spider-div"] td *,
+div[is="site-spider-div"] th * {
+    color: white !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    text-decoration: none !important;
+}
+div[is="site-spider-div"] tr .block {
+    display: block !important;
+    width: 340px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+div[is="site-spider-div"] .table tr[class*="status"] .spider-status {
+    display: inline-block;
+    padding: 2px 6px !important;
+    margin: 1px 0 !important;;
+}
+div[is="site-spider-div"] .table tr[class*="status--4"] .spider-status,
+div[is="site-spider-div"] .table tr[class*="status--5"] .spider-status,
+div[is="site-spider-div"] .table tr[class*="status--NaN"] .spider-status {
+    background-color: red !important;
+    color: black !important;
+}
+div[is="site-spider-div"] .table tr[class*="status--0"],
+div[is="site-spider-div"] .table tr[class*="status--0"] * {
+    background-color: grey !important;
+    color: black !important;
+}
+div[is="site-spider-div"] .table tr[class*="status--3"],
+div[is="site-spider-div"] .table tr[class*="status--3"] * {
+    background-color: lightyellow !important;
+    color: black !important;
+}
+div[is="site-spider-div"] .table tr[class*="status--200"] .spider-status {
+    background-color: green !important;
+    color: white !important;
+}
+div[is="site-spider-div"] .table tr[class*="status--200"][class*="has-match--true"],
+div[is="site-spider-div"] .table tr[class*="status--200"][class*="has-match--true"] * {
+    background-color: gold !important;
+    color: black !important;
+}
+div[is="site-spider-div"] .table a:focus,
+div[is="site-spider-div"] .table a:hover {
+    text-decoration: underline !important;
+}
+div[is="site-spider-div"] .table tr[class*="status"]:nth-child(even) {
+    background-color: #2b2b2b;
+}
+div[is="site-spider-div"] .table tr[class*="status"]:nth-child(odd) {
+    background-color: #424242;
+}
+
+/*  styles that apply to the page  */
+[data-spider-status] {
+    outline: 4px solid grey !important;
+}
+[data-spider-status="200"] {
+    outline: 4px solid green !important;
+}
+[data-spider-status="4"],
+[data-spider-status="5"] {
+    outline: 4px solid red !important;
+}
