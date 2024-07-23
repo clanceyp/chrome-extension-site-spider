@@ -1,7 +1,4 @@
-# AEM URL Blender
+# Site Spider - content finder
 
 
-This extension adds a page action menu to switch URLs for Adobe AEM and other large projects.
-AEM URL Blender extension adds links to the page action menu. 
-It uses simple regular expressions to enable you to match paths and replace sections of the URL. 
-This extension was developed primarily for use when you are working on a large project with many instances. For smaller projects I recommend jmhobbs's Domain Swap extension https://chrome.google.com/webstore/detail/domain-swap/ngiiihlebepigjbefembddhdplmaghep
+This extension incorporates a page action menu that initiates a search for pages within the current domain, matching specific search strings. The search scrutinizes the HTML rather than the text content of the page, making it particularly useful when seeking an element with a distinct class name or a page featuring specific meta-data.
