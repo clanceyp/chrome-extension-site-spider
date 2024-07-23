@@ -1,8 +1,13 @@
 /* TODO; refactor after customElements polyfill has been done */
 div[is="site-spider-div"] {
-    background-color: #151515 !important;
-    border: 0 none !important;
-    border-radius: 3px !important;
+    --spider-dark: #151515;
+    --spider-dark-md: #2c2c2c;
+    --spider-medium: #6b6b6b;
+}
+div[is="site-spider-div"] {
+    background-color: var(--spider-dark) !important;
+    border: 1px solid var(--spider-dark-md) !important;
+    border-radius: 6px !important;
     box-shadow: -5px 5px 15px black !important;
     color: white !important;
     display: block !important;
@@ -25,16 +30,20 @@ div[is="site-spider-div"] header {
 div[is="site-spider-div"] h2 {
     border: 0 none !important;
     font-size: 2rem !important;
+    line-height: 2.5rem !important;
+    min-height: 2.5rem !important;
+    position: relative;
 }
 div[is="site-spider-div"] h2 svg {
     position: absolute;
+    top: 0;
 }
 div[is="site-spider-div"] main {
     margin-right: 12px;
     max-height: 60vh !important;
     overflow-x: hidden !important;
     overflow-y: scroll !important;
-    scrollbar-color: #6b6b6b #2c2c2c !important;
+    scrollbar-color: var(--spider-medium) var(--spider-dark-md) !important;
     scrollbar-width: thin !important;
 }
 /* utils */
@@ -124,8 +133,8 @@ div[is="site-spider-div"] .table tr[class*="status--200"] .spider-status {
     background-color: green !important;
     color: white !important;
 }
-div[is="site-spider-div"] .table tr[class*="status--200"][class*="has-match--true"],
-div[is="site-spider-div"] .table tr[class*="status--200"][class*="has-match--true"] * {
+div[is="site-spider-div"] .table tr[class*="status--200"][class*="content-match--true"],
+div[is="site-spider-div"] .table tr[class*="status--200"][class*="content-match--true"] * {
     background-color: gold !important;
     color: black !important;
 }
@@ -144,10 +153,13 @@ div[is="site-spider-div"] .table tr[class*="status"]:nth-child(odd) {
 [data-spider-status] {
     outline: 4px solid grey !important;
 }
-[data-spider-status="200"] {
+[data-spider-status^="2"],
+[data-spider-status^="3"],
+[data-spider-status="current-page"] {
     outline: 4px solid green !important;
 }
-[data-spider-status="4"],
-[data-spider-status="5"] {
+[data-spider-status^="4"],
+[data-spider-status^="5"],
+[data-spider-status="not-valid-url"] {
     outline: 4px solid red !important;
 }
