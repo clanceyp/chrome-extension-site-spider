@@ -193,20 +193,33 @@ function generateTableRow(key, value = "", label = "") {
 function addMenuHMTL(html) {
     menu.insertAdjacentHTML('beforeend', html);
 }
-function makeInput(item, type){
-   // console.log("foo", sections)
+function isEnabled(targetValue, dependsValue) {
+    console.log("foobar baz 1", targetValue, dependsValue, !!(targetValue && (targetValue === dependsValue || dependsValue === "not-empty")))
+    return !!(targetValue && (targetValue === dependsValue || dependsValue === "not-empty"));
+}
+function isItemDisabled(depends, section) {
+    const targetValue = section.data.find( el => el.id = depends.id )?.value;
+    return !isEnabled(targetValue, depends.value);
+};
+function dependsAttributes(depends, section) {
+    if (!depends) {
+        return "";
+    }
+    return  `data-depends-el="${ depends.id }" data-depends-value="${ depends.value || 'not-empty' }" data-disabled="${ isItemDisabled(depends, section) }"`;
+}
+function makeInput(item, type, section){
+    console.log("foo", type, item);
     let rowHTML = "";
     if (type === "text") {
-        rowHTML = `<label for="${ item.id }">${item.label}</label><input class="uk-input" aria-describedby="help-${ item.id }" id="${ item.id }" value="${ item.value }" name="${ item.name }" />`;
+        rowHTML = `<label for="${ item.id }">${item.label}</label><input ${ dependsAttributes(item.depends, section) } class="uk-input" aria-describedby="help-${ item.id }" id="${ item.id }" value="${ item.value }" name="${ item.name }" />`;
     }
     if (type === "textarea") {
-        rowHTML = `<label for="${ item.id }">${ item.label}</label><textarea class="uk-textarea" aria-describedby="help-${ item.id }" id="${ item.id }" name="${ item.name }">${ item.value }</textarea>`;
+        rowHTML = `<label for="${ item.id }">${ item.label}</label><textarea ${ dependsAttributes(item.depends, section) } class="uk-textarea" aria-describedby="help-${ item.id }" id="${ item.id }" name="${ item.name }">${ item.value }</textarea>`;
     }
     if (type === "range") {
         rowHTML = `<label for="${ item.id }">${ item.label } (<span data-value>${ item.value }</span>)</label><input class="" aria-describedby="help-${ item.id }" id="${ item.id }" type="range" name="${ item.name }" max="${ item.max }" min="${ item.min}" value="${ item.value }" />`;
     }
     if (type === "checkbox") {
-        console.log("checkbox", item)
         rowHTML = `<label for="${ item.id }">
                 <input type="hidden" name="${ item.name }" value="${ item.value }" id="hidden-${ item.id }">
                 <input class="uk-checkbox" aria-describedby="help-${ item.id }" id="${ item.id }" type="checkbox" ${ item.value.includes("true") ? 'checked' : '' }  /> ${ item.label}</label>`;
@@ -232,13 +245,21 @@ function makeInput(item, type){
         }
         rowHTML = `<fieldset class="uk-fieldset"><legend class="uk-legend">${ item.label}</legend><div>${ getOptions() }</div></fieldset>`;
     }
-    return `<div><span title="${ item.help }" style="border-radius: 50%;cursor: default;background-color: var(--accent-color); overflow: hidden;float: right;width: 20px;height: 20px;display: block" id="help-${ item.id }"><span style="opacity: 0">${ item.help }</span></span>${ rowHTML }</div>`;
+    return `<div>
+    <style>
+        [id="help-button-${ item.id }"] {anchor-name: --help-${ item.id }}
+        [id="help-${ item.id }"] {position-anchor: --help-${ item.id }}
+    </style>
+    <button class="help-button" id="help-button-${ item.id }" aria-label="Show help"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 30 30" role="presentation"><use href="#Help" /></svg></button>
+    <div id="help-${ item.id }" class="help">${ item.help }</div>
+    ${ rowHTML }
+</div>`;
 }
 function generateFormContent(section) {
     let HTML = "";
     section.data.forEach( element => {
         HTML += `<div class="uk-margin --margin-${element.type}">
-    ${ makeInput(element, element.type) }
+    ${ makeInput(element, element.type, section) }
 </div>`
     })
     return HTML;
@@ -351,6 +372,15 @@ function updateSectionDataByTable(table) {
 
     setSectionsDataDebounce();
 }
+function checkDependentElements(e) {
+    const id = e.target.id;
+    const value = e.target.value;
+    const dependents = settingsFormDynamicSection.querySelectorAll(`[data-depends-el="${ id }"]`);
+
+    dependents.forEach( el => {
+        el.setAttribute("data-disabled", !isEnabled(value, el.dataset.dependsValue));
+    });
+}
 function formOnAction(e) {
     // delegate events
     const target = e.target;
@@ -421,6 +451,7 @@ function addEventListeners() {
     settingsForm.addEventListener("input", debounce((e) => titleUpdate(e)));
     settingsForm.addEventListener("input", debounce((e) => formUpdate(e)));
     settingsForm.addEventListener("input", formOnAction);
+    settingsForm.addEventListener("input", checkDependentElements);
     settingsForm.addEventListener("click", formUpdate);
     settingsForm.addEventListener("submit", e => e.preventDefault());
 

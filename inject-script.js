@@ -123,7 +123,7 @@ function init(settings) {
         attachDrag(siteSpiderResultsElement);
     }
     function populateLinksArray() {
-        const currentUrl = `${ location.href.split("#")[0] }`;
+        const currentUrl = settings.ignoreHash ? `${ location.href.split("#")[0] }#` : location.href;
         const testLink = href => {
             let url;
             try {
@@ -226,6 +226,7 @@ function init(settings) {
         } else {
             siteSpiderResultsElement.querySelector(".table tbody").innerHTML = getAllTableRows();
             updateValidatedCount();
+            siteSpiderResultsElement.querySelector("main").scrollTop = 0;
         }
 
     }
