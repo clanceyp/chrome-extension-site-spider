@@ -61,12 +61,8 @@ const eventUtils = {
         });
 
     },
-    validateRegEx: (e) => {
-        e.target.setAttribute("aria-invalid", (!validateRegExp( e.target.value )).toString() )
-    },
     updateOnInput: (e) => {
         e.preventDefault();
-        console.log("saving form state")
         updateSectionData(e);
     },
     testUrl: (e) => {
@@ -194,7 +190,6 @@ function addMenuHMTL(html) {
     menu.insertAdjacentHTML('beforeend', html);
 }
 function isEnabled(targetValue, dependsValue) {
-    console.log("foobar baz 1", targetValue, dependsValue, !!(targetValue && (targetValue === dependsValue || dependsValue === "not-empty")))
     return !!(targetValue && (targetValue === dependsValue || dependsValue === "not-empty"));
 }
 function isItemDisabled(depends, section) {
@@ -208,7 +203,6 @@ function dependsAttributes(depends, section) {
     return  `data-depends-el="${ depends.id }" data-depends-value="${ depends.value || 'not-empty' }" data-disabled="${ isItemDisabled(depends, section) }"`;
 }
 function makeInput(item, type, section){
-    console.log("foo", type, item);
     let rowHTML = "";
     if (type === "text") {
         rowHTML = `<label for="${ item.id }">${item.label}</label><input ${ dependsAttributes(item.depends, section) } class="uk-input" aria-describedby="help-${ item.id }" id="${ item.id }" value="${ item.value }" name="${ item.name }" />`;
@@ -239,7 +233,7 @@ function makeInput(item, type, section){
             let options = "";
             item.options.forEach( (option, i) => {
                 const optionId =  `${ option.value.toLowerCase().replace(/\W/g,"-") }-${ i }`;
-                options += `<div><input id="${optionId}" aria-label="${option.value }" ${ item.value === option.value ? 'checked' : ''} type="radio" name="${ item.name }" value="${ option.value }" /><label for="${ optionId }">${ option.label || option.value }</label></div>`
+                options += `<div><input id="${optionId}" ${ item.value === option.value ? 'checked' : ''} type="radio" name="${ item.name }" value="${ option.value }" /><label for="${ optionId }">${ option.label || option.value }</label></div>`
             })
             return options;
         }
@@ -342,7 +336,6 @@ function updateSectionData(e) {
     const formData = new FormData(settingsForm);
 
     for (const [key, value] of formData) {
-        console.log(key, value);
         if ( key && !key.startsWith("section") ) {
             sectionData.data.push({
                 key,
@@ -386,7 +379,6 @@ function formOnAction(e) {
     const target = e.target;
 
     if (target.type === "range") {
-        console.log("this happend")
         const displayValue = target.parentNode.querySelector("[data-value]");
         if (displayValue) {
             displayValue.textContent = target.value;
