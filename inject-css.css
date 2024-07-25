@@ -41,8 +41,12 @@ div[is="site-spider-div"] h2 svg {
     top: 0;
 }
 div[is="site-spider-div"] main {
-    margin-right: 12px;
+    border: 1px solid var(--spider-dark-md) !important;
+    display: block !important;
+    margin-right: 12px !important;
     max-height: 50vh !important;
+    min-height: auto !important;
+    padding-right: 12px !important;
     overflow-x: hidden !important;
     overflow-y: scroll !important;
     scrollbar-color: var(--spider-medium) var(--spider-dark-md) !important;
@@ -86,10 +90,12 @@ div[is="site-spider-div"] .txt-c {
 }
 /* table styles */
 div[is="site-spider-div"] .table {
-    table-layout: auto;
+    border: 0 none !important;
+    table-layout: auto !important;
 }
 div[is="site-spider-div"] td,
 div[is="site-spider-div"] th {
+    border: 0 none !important;
     color: white !important;
     font-size: .8rem !important;
     font-weight: normal !important;

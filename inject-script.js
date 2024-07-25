@@ -185,7 +185,6 @@ function init(settings) {
             if (!isContentSearch) {
                 return "";
             }
-            return `Content <span data-content-match></span>`
         }
         return `
 <header class="m-null py-medium">
@@ -199,7 +198,7 @@ function init(settings) {
     <div class="m-null p-medium txt-c">
         Links total ${ linksArray.length }. 
         Checked <span data-validated>0</span>.
-        Method <strong>${ settings.requestType }</strong>
+        Method <span>${ settings.requestType }</span>.
         ${ contentSearchStatus() }
      </div>
 </header>
