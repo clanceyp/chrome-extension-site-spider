@@ -4,7 +4,10 @@ function init(settings) {
     const cleanUp = () => {
         document.getElementById(id).remove();
         document.querySelectorAll("[data-spider-status]")
-            .forEach(element => element.removeAttribute("data-spider-status"));
+            .forEach(element => {
+                element.removeAttribute("data-spider-status");
+                element.removeAttribute("data-spider-match");
+            });
     }
     if (document.getElementById(id)) {
         cleanUp();
@@ -250,6 +253,9 @@ function init(settings) {
                         }
                     }
                     link.sort = link.contentMatch ? 600 : link.status;
+                    if (link.contentMatch) {
+                        link.element.setAttribute("data-spider-match", "true");
+                    }
                     validationChange(link);
                     validateLink();
                 })

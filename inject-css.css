@@ -42,7 +42,7 @@ div[is="site-spider-div"] h2 svg {
 }
 div[is="site-spider-div"] main {
     margin-right: 12px;
-    max-height: 60vh !important;
+    max-height: 50vh !important;
     overflow-x: hidden !important;
     overflow-y: scroll !important;
     scrollbar-color: var(--spider-medium) var(--spider-dark-md) !important;
@@ -164,4 +164,7 @@ div[is="site-spider-div"] .table tr[class*="status"]:nth-child(odd) {
 [data-spider-status^="5"],
 [data-spider-status="not-valid-url"] {
     outline: 4px solid red !important;
+}
+[data-spider-status][data-spider-match="true"] {
+    outline-color: gold !important;
 }
