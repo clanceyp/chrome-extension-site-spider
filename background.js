@@ -15,14 +15,3 @@ function run(currentTab) {
 }
 
 chrome.action.onClicked.addListener(run);
-
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        if (request.type === "settings-request") {
-            chrome.storage.local.get("settings").then(settings => {
-                sendResponse({ "foo": settings } );
-            });
-
-        }
-    }
-);

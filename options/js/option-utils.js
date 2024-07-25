@@ -161,8 +161,7 @@ function getSectionsData(callback) {
                     const storageSections = JSON.parse(localStorage);
                     storageSections.forEach( (section, i) => {
                         section.data.forEach((item, ii) => {
-                            // todo; add value to static item
-                            console.log(item);
+                            // todo; add value to static item in a better way!
                             defaultContent[i].data[ii].value = item.value;
                         })
                     })

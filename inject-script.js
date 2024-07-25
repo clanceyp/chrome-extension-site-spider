@@ -1,28 +1,32 @@
 function init(settings) {
+    console.log(settings)
     const id = "site-spider-results";
     const cleanUp = () => {
         document.getElementById(id).remove();
         document.querySelectorAll("[data-spider-status]")
-            .forEach(element => element.removeAttribute("data-spider-status"));
+            .forEach(element => {
+                element.removeAttribute("data-spider-status");
+                element.removeAttribute("data-spider-match");
+            });
     }
     if (document.getElementById(id)) {
         cleanUp();
         return;
     }
-    const maxCheckLen = -1;
-    const isContentSearch = settings.requestType.toLowerCase() === "get" && settings.searchTerm.length;
+    const maxCheckLength = -1;
+    const isContentSearch = settings.requestType.toLowerCase() === "get" && settings.searchTerms.length;
     let count = 0;
     const links = document.querySelectorAll("a[href]");
     let siteSpiderResultsElement;
     const linksArray = [];
-    const getLabel = (el) => {
+    const getLinkLabel = (el) => {
         if ( el.getAttribute("aria-label") ) {
             return el.getAttribute("aria-label");
         } else if ( el.getAttribute("aria-labeledby") ) {
             const id = el.getAttribute("aria-labeledby");
             return document
                     .getElementById( id.split(" ")[0] )
-                    ?.innerText;
+                    ?.innerText || el.innerText;
         } else {
             return el.innerText || "missing label";
         }
@@ -38,8 +42,8 @@ function init(settings) {
             this.style.left = `${ initX + e.pageX-firstX }px` ;
             this.style.top = `${ initY + e.pageY-firstY }px`;
         }
-        element.addEventListener('mousedown', function(e) {
 
+        element.addEventListener('mousedown', function(e) {
             e.preventDefault();
             element.classList.add("spider-dragging");
             initX = this.offsetLeft;
@@ -48,8 +52,7 @@ function init(settings) {
             firstY = e.pageY;
 
             this.addEventListener('mousemove', dragIt, false);
-
-            window.addEventListener('mouseup', function() {
+            document.addEventListener('mouseup', function() {
                 element.classList.remove("spider-dragging");
                 element.removeEventListener('mousemove', dragIt, false);
             }, false);
@@ -82,7 +85,7 @@ function init(settings) {
 
     }
     function getRowHTML(anchor) {
-        return `<tr class="status--${ anchor.status } has-match--${ anchor.hasMatch }" data-sort="${ anchor.sort }">
+        return `<tr class="status--${ anchor.status } content-match--${ anchor.contentMatch }" data-sort="${ anchor.sort }">
     <td>
         <a href="${ anchor.href }" target="_blank" title="${ anchor.href }" class="block">
             <span class="spider-status">${ anchor.status }</span> ${ anchor.pathname }
@@ -90,7 +93,7 @@ function init(settings) {
     </td>
 </tr>`;
     }
-    function tableRows() {
+    function getAllTableRows() {
         let rows = "";
         linksArray.forEach( anchor => {
             rows += getRowHTML(anchor)
@@ -123,39 +126,47 @@ function init(settings) {
         attachDrag(siteSpiderResultsElement);
     }
     function populateLinksArray() {
-        const currentUrl = `${ location.href.split("#")[0] }#`;
+        const currentUrl = settings.ignoreHash ? `${ location.href.split("#")[0] }#` : location.href;
         const testLink = href => {
             let url;
             try {
                  url = new URL(href);
             } catch (e) {
-                return { url: null, valid: false };
+                return { url: null, valid: false, message: "not-valid-url" };
             }
-            // const url = new URL("/", href);
             if (linksArray.find( link => link.href === href)) {
-                return { url: null, valid: false }; // ignore duplicates
+                return { url: null, valid: false, message: "duplicate"  }; // ignore duplicates
             }
             if (settings.ignoreList.some( ignore => href.includes(ignore) )) {
-                return { url: null, valid: false }; // ignore if match in ignore list is found
+                return { url: null, valid: false, message: "ignore-list"  }; // ignore if match in ignore list is found
+            }
+            if (url.origin !== location.origin) {
+                return { url: null, valid: false, message: "different-domain"  };
+            }
+            if (href.startsWith( currentUrl )) {
+                return { url: null, valid: false, message: "current-page"  };
             }
             return {
                 url,
-                valid: !href.startsWith( currentUrl ) && url.origin === location.origin
+                valid: true
             };
         }
         const isLimit = (c) => {
-            if (maxCheckLen < 0) {
+            if (maxCheckLength < 0) {
                 return false;
             }
-            return c >= maxCheckLen;
+            return c >= maxCheckLength;
         }
 
         links.forEach( (link, i) => {
+            if (settings.ignoreHash) {
+                link.href = link.href.split("#")[0];
+            }
             const ops = testLink(link.href);
             if (  ops.valid && !isLimit(count) ) {
                 link.setAttribute("data-spider-status", "0");
                 linksArray.push({
-                    label: getLabel( link ),
+                    label: getLinkLabel( link ),
                     href: link.href,
                     pathname: ops.url.pathname,
                     status: 0,
@@ -166,6 +177,7 @@ function init(settings) {
                 })
                 count = count + 1;
             }
+            link.setAttribute("data-spider-status", ops.message || "");
         });
     }
     function getContent() {
@@ -173,14 +185,14 @@ function init(settings) {
             if (!isContentSearch) {
                 return "";
             }
-            return `Content ${ linksArray.filter(el => el.contentMatch).length }`
+            return `Content <span data-content-match></span>`
         }
         return `
 <header class="m-null py-medium">
     <h2 class="m-null txt-c p-null">
         Site Spider
         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" preserveAspectRatio="none" viewBox="0 0 490 490">
-            <path fill="none" stroke="#fff" stroke-width="36" 
+            <path fill="none" stroke="#aaaaaa" stroke-width="36" 
                 stroke-linecap="round" d="m280,278a153,153 0 1,0-2,2l170,170m-91-117 110,110-26,26-110-110"/>
         </svg>
     </h2>
@@ -202,16 +214,22 @@ function init(settings) {
 </main>`;
     }
     function updateValidatedCount() {
-        siteSpiderResultsElement.querySelectorAll("[data-validated]")
-            .forEach( el => el.textContent = linksArray.filter((element) => element.validated ).length);
+        const validatedLinksCount = linksArray.filter((element) => element.validated ).length;
+        siteSpiderResultsElement
+            .querySelectorAll("[data-validated]")
+            .forEach( el => el.textContent = validatedLinksCount );
+        siteSpiderResultsElement
+            .querySelectorAll("[data-content-match]")
+            .forEach( el => el.textContent = linksArray.filter(el => !!el.contentMatch).length );
     }
     function validationChange(link = null) {
         if ( link ) {
             addTableRow( link );
             updateValidatedCount();
         } else {
-            siteSpiderResultsElement.querySelector(".table tbody").innerHTML = tableRows();
-            updateValidatedCount()
+            siteSpiderResultsElement.querySelector(".table tbody").innerHTML = getAllTableRows();
+            updateValidatedCount();
+            siteSpiderResultsElement.querySelector("main").scrollTop = 0;
         }
 
     }
@@ -229,14 +247,14 @@ function init(settings) {
                     return response.text();
                 }).then(text => {
                     if (settings.requestType.toLowerCase() === "get") {
-                        link.hasMatch = false;
-                        if (settings.searchTerm.length && text) {
-                            link.hasMatch = settings.searchTerm.some( term => text.includes(term) );
+                        link.contentMatch = false;
+                        if (settings.searchTerms.length && text) {
+                            link.contentMatch = settings.searchTerms.some( term => text.includes(term) );
                         }
                     }
-                    link.sort = link.hasMatch ? 600 : link.status;
-                    if (siteSpiderResultsElement.classList.contains("foo")) {
-                        return
+                    link.sort = link.contentMatch ? 600 : link.status;
+                    if (link.contentMatch) {
+                        link.element.setAttribute("data-spider-match", "true");
                     }
                     validationChange(link);
                     validateLink();
@@ -256,15 +274,18 @@ function init(settings) {
             return false;
         }
     }
+    function validateAllLinks() {
+        setTimeout(() => {
+            siteSpiderResultsElement.innerHTML = getContent();
+            for (let step = 0; step < settings.concurrentRequests; step++) {
+                validateLink();
+            }
+        }, 10);
+    }
 
     populateLinksArray();
     setSiteSpiderResults();
-    setTimeout(() => {
-        siteSpiderResultsElement.innerHTML = getContent();
-        for (let step = 0; step < settings.concurrentRequests; step++) {
-            validateLink();
-        }
-    }, 10);
+    validateAllLinks();
 }
 
 
@@ -274,6 +295,7 @@ chrome.storage.local.get(["settings"]).then(result => {
             "concurrentRequests": parseInt(settings.data.find( item => item.key === "concurrentRequests")?.value),
             "requestType": settings.data.find( item => item.key === "preferredRequestType")?.value,
             "ignoreList": settings.data.find( item => item.key === "ignoreList")?.value?.split(/\r?\n|\r|\n/g) || [],
-            "searchTerm": settings.data.find( item => item.key === "searchTerm")?.value?.split(/\r?\n|\r|\n/g) || []
+            "searchTerms": settings.data.find( item => item.key === "searchTerms")?.value?.split(/\r?\n|\r|\n/g) || [],
+            "ignoreHash": settings.data.find( item => item.key === "ignoreHash")?.value === "true"
         });
 });

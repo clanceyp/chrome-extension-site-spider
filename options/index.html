@@ -40,8 +40,15 @@
                             <p>
                                 Found a bug? Please report it,
                                 or fix it, on
-                                <a href="https://github.com/clanceyp/chrome-extension-aem-url-blender" target="_blank">Github</a>
+                                <a href="https://github.com/clanceyp/chrome-extension-site-spider" target="_blank">Github - Site Spider</a>
                             </p>
+                            <div>
+                                <textarea placeholder="JSON" id="settings-as-string-input" class="uk-textarea uk-inverse-dark" rows="8" aria-labelledby="current-storage-button"></textarea>
+                                <p>
+                                    <button class="uk-button uk-button-default" id="current-storage-button" data-view-sections-storage>Current sections storage</button>
+                                    <button disabled class="uk-button uk-button-default" data-save-sections-storage>Save</button>
+                                </p>
+                            </div>
                         </div>
                     </fieldset>
                 </form>
@@ -51,6 +58,13 @@
             <!-- add icons here... -->
             <symbol id="TrashCan" width="100%" height="100%" viewBox="0 0 24 24">
                 <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z"></path>
+            </symbol>
+            <symbol id="Help" width="100%" height="100%" viewBox="0 0 512 512">
+                <path d="M256,80A176,176,0,1,0,432,256,176,176,0,0,0,256,80Z"
+                      style="stroke-miterlimit:10;stroke-width:32px"/>
+                <path d="M200,202.29s.84-17.5,19.57-32.57C230.68,160.77,244,158.18,256,158c10.93-.14,20.69,1.67,26.53,4.45,10,4.76,29.47,16.38,29.47,41.09,0,26-17,37.81-36.37,50.8S251,281.43,251,296"
+                      style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:28px"/>
+                <circle cx="250" cy="348" r="20"/>
             </symbol>
         </svg>
         <script type="module" src="/options/js/options.js"></script>
