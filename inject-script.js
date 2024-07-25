@@ -185,6 +185,7 @@ function init(settings) {
             if (!isContentSearch) {
                 return "";
             }
+            return `Content <strong data-content-match>0</strong>`
         }
         return `
 <header class="m-null py-medium">
