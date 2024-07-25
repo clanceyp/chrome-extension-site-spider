@@ -20,6 +20,6 @@
   },
   "action": {
     "default_icon" : "/lib/i/48.png",
-    "default_title": "Search Linked Pages HTML"
+    "default_title": "Linked Page Source Code Searcher"
   }
 }
