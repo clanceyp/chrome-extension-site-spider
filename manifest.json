@@ -1,13 +1,16 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "manifest_version": 3,
-  "name": "Site HTML inspector",
-  "short_name": "Site spider",
-  "description": "This extension provides a search to find HTML content, like class names etc.",
-  "homepage_url": "https://github.com/clanceyp/",
+  "name": "Source Code Searcher",
+  "short_name": "Site Spider",
+  "description": "This extension provides a search to find HTML content, like class names etc. within the current domain",
+  "homepage_url": "https://github.com/clanceyp/chrome-extension-site-spider",
   "background": {
     "service_worker": "background.js"
   },
+  "host_permissions": [
+    "*://*/*"
+  ],
   "permissions": [
     "activeTab",
     "storage",
@@ -20,6 +23,6 @@
   },
   "action": {
     "default_icon" : "/lib/i/48.png",
-    "default_title": "Search HTML"
+    "default_title": "Search Linked Pages HTML"
   }
 }

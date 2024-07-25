@@ -11,7 +11,7 @@ div[is="site-spider-div"] {
     box-shadow: -5px 5px 15px black !important;
     color: white !important;
     display: block !important;
-    font-family: sans-serif !important;
+    /* font-family: sans-serif !important; inherit from the parent site */
     font-size: .8rem !important;
     left: 20px;
     padding: 20px 0 40px 0 !important;
@@ -29,8 +29,10 @@ div[is="site-spider-div"] header {
 }
 div[is="site-spider-div"] h2 {
     border: 0 none !important;
+    color: inherit !important;
     font-size: 2rem !important;
     line-height: 2.5rem !important;
+    letter-spacing: 0.1rem !important;
     min-height: 2.5rem !important;
     position: relative;
 }

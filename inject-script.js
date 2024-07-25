@@ -11,7 +11,7 @@ function init(settings) {
         return;
     }
     const maxCheckLength = -1;
-    const isContentSearch = settings.requestType.toLowerCase() === "get" && settings.searchTerm.length;
+    const isContentSearch = settings.requestType.toLowerCase() === "get" && settings.searchTerms.length;
     let count = 0;
     const links = document.querySelectorAll("a[href]");
     let siteSpiderResultsElement;
@@ -245,8 +245,8 @@ function init(settings) {
                 }).then(text => {
                     if (settings.requestType.toLowerCase() === "get") {
                         link.contentMatch = false;
-                        if (settings.searchTerm.length && text) {
-                            link.contentMatch = settings.searchTerm.some( term => text.includes(term) );
+                        if (settings.searchTerms.length && text) {
+                            link.contentMatch = settings.searchTerms.some( term => text.includes(term) );
                         }
                     }
                     link.sort = link.contentMatch ? 600 : link.status;
@@ -289,7 +289,7 @@ chrome.storage.local.get(["settings"]).then(result => {
             "concurrentRequests": parseInt(settings.data.find( item => item.key === "concurrentRequests")?.value),
             "requestType": settings.data.find( item => item.key === "preferredRequestType")?.value,
             "ignoreList": settings.data.find( item => item.key === "ignoreList")?.value?.split(/\r?\n|\r|\n/g) || [],
-            "searchTerm": settings.data.find( item => item.key === "searchTerm")?.value?.split(/\r?\n|\r|\n/g) || [],
+            "searchTerms": settings.data.find( item => item.key === "searchTerms")?.value?.split(/\r?\n|\r|\n/g) || [],
             "ignoreHash": settings.data.find( item => item.key === "ignoreHash")?.value === "true"
         });
 });
