@@ -148,8 +148,10 @@ function populateManifestData() {
             } else {
                 element.style.backgroundImage = `url(${ imgSrc })`
             }
+        } else if (element.dataset.manifest === "homepage_url") {
+            element.setAttribute("href", manifest[element.dataset.manifest] );
         } else {
-              element.textContent = manifest[element.dataset.manifest] || "";
+            element.textContent = manifest[element.dataset.manifest] || "";
         }
     })
 }
