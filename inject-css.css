@@ -3,6 +3,7 @@ div[is="site-spider-div"] {
     --spider-dark: #151515;
     --spider-dark-md: #2c2c2c;
     --spider-medium: #6b6b6b;
+    --spider-medium-light: #b6b6b6;
 }
 div[is="site-spider-div"] {
     background-color: var(--spider-dark) !important;
@@ -14,6 +15,7 @@ div[is="site-spider-div"] {
     /* font-family: sans-serif !important; inherit from the parent site */
     font-size: .8rem !important;
     left: 20px;
+    min-width: 400px;
     padding: 20px 0 40px 0 !important;
     position: fixed !important;
     transition: opacity 300ms;
@@ -26,6 +28,8 @@ div[is="site-spider-div"].spider-dragging {
 }
 div[is="site-spider-div"] header {
     cursor: move;
+    margin-top: 12px;
+    padding-top: 0;
 }
 div[is="site-spider-div"] h2 {
     border: 0 none !important;
@@ -37,8 +41,12 @@ div[is="site-spider-div"] h2 {
     position: relative;
 }
 div[is="site-spider-div"] h2 svg {
+    cursor: pointer;
     position: absolute;
     top: 0;
+}
+div[is="site-spider-div"] h2 svg path {
+    pointer-events: none;
 }
 div[is="site-spider-div"] main {
     border: 1px solid var(--spider-dark-md) !important;
@@ -52,12 +60,45 @@ div[is="site-spider-div"] main {
     scrollbar-color: var(--spider-medium) var(--spider-dark-md) !important;
     scrollbar-width: thin !important;
 }
+div[is="site-spider-div"] button {
+    border: 1px solid var(--spider-medium-light) !important;
+    border-radius: 5px !important;
+}
+div[is="site-spider-div"] button[data-action-clean-up] {
+    background-color: transparent!important;
+    border: unset !important;
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    height: 28px;
+    float: right;
+    place-items: center;
+    position: relative;
+    transform: translate(-8px, -18px) rotate(45deg);
+    width: 28px;
+    z-index: 2;
+}
+div[is="site-spider-div"] button[data-action-clean-up]:before {
+    color: var(--spider-medium-light) !important;
+    content: "+";
+    display: block;
+    font-size: 28px !important;
+}
 /* utils */
 div[is="site-spider-div"] .m-null {
     margin: 0 !important;
 }
+div[is="site-spider-div"] .m-small {
+    margin: 8px !important;
+}
+div[is="site-spider-div"] .m-medium {
+    margin: 16px !important;
+}
 div[is="site-spider-div"] .p-null {
     padding: 0 !important;
+}
+div[is="site-spider-div"] .p-xsmall {
+    padding: 4px !important;
 }
 div[is="site-spider-div"] .p-small {
     padding: 8px !important;
@@ -88,13 +129,14 @@ div[is="site-spider-div"] .mx-medium {
 div[is="site-spider-div"] .txt-c {
     text-align: center;
 }
-/* table styles */
-div[is="site-spider-div"] .table {
-    border: 0 none !important;
-    table-layout: auto !important;
+div[is="site-spider-div"] .mono {
+    font-family: Consolas, monaco, monospace !important;
+    font-size: 85% !important;
 }
-div[is="site-spider-div"] td,
-div[is="site-spider-div"] th {
+
+/* table styles */
+div[is="site-spider-div"] li a,
+div[is="site-spider-div"] li div {
     border: 0 none !important;
     color: white !important;
     font-size: .8rem !important;
@@ -103,58 +145,78 @@ div[is="site-spider-div"] th {
     padding: 0 !important;
     text-align: left !important;
 }
-div[is="site-spider-div"] td *,
-div[is="site-spider-div"] th * {
+div[is="site-spider-div"] ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+div[is="site-spider-div"] li,
+div[is="site-spider-div"] li * {
     color: white !important;
     font-size: inherit !important;
     font-weight: inherit !important;
     text-decoration: none !important;
 }
-div[is="site-spider-div"] tr .block {
+div[is="site-spider-div"] li .block {
     display: block !important;
     width: 340px;
     overflow: hidden;
     white-space: nowrap;
 }
-div[is="site-spider-div"] .table tr[class*="status"] .spider-status {
+div[is="site-spider-div"] li .search {
+    font-style: oblique;
+    opacity: 0.8;
+}
+div[is="site-spider-div"] .table li[class*="status"] .spider-status {
     display: inline-block;
     padding: 2px 6px !important;
     margin: 1px 0 !important;;
 }
-div[is="site-spider-div"] .table tr[class*="status--4"] .spider-status,
-div[is="site-spider-div"] .table tr[class*="status--5"] .spider-status,
-div[is="site-spider-div"] .table tr[class*="status--NaN"] .spider-status {
+div[is="site-spider-div"] .table li[class*="status--4"] .spider-status,
+div[is="site-spider-div"] .table li[class*="status--5"] .spider-status,
+div[is="site-spider-div"] .table li[class*="status--NaN"] .spider-status {
     background-color: red !important;
     color: black !important;
 }
-div[is="site-spider-div"] .table tr[class*="status--0"],
-div[is="site-spider-div"] .table tr[class*="status--0"] * {
+div[is="site-spider-div"] .table li[class*="status--0"],
+div[is="site-spider-div"] .table li[class*="status--0"] * {
     background-color: grey !important;
     color: black !important;
 }
-div[is="site-spider-div"] .table tr[class*="status--3"],
-div[is="site-spider-div"] .table tr[class*="status--3"] * {
+div[is="site-spider-div"] .table li[class*="status--3"],
+div[is="site-spider-div"] .table li[class*="status--3"] * {
     background-color: lightyellow !important;
     color: black !important;
 }
-div[is="site-spider-div"] .table tr[class*="status--200"] .spider-status {
+div[is="site-spider-div"] .table li[class*="status--200"] .spider-status {
     background-color: green !important;
     color: white !important;
 }
-div[is="site-spider-div"] .table tr[class*="status--200"][class*="content-match--true"],
-div[is="site-spider-div"] .table tr[class*="status--200"][class*="content-match--true"] * {
+div[is="site-spider-div"] .table li[class*="status--200"][class*="content-match--true"],
+div[is="site-spider-div"] .table li[class*="status--200"][class*="content-match--true"] * {
     background-color: gold !important;
     color: black !important;
+}
+div[is="site-spider-div"] .table li[class*="status"]:nth-child(even) {
+    background-color: #2b2b2b;
+}
+div[is="site-spider-div"] .table li[class*="status"]:nth-child(odd) {
+    background-color: #424242;
 }
 div[is="site-spider-div"] .table a:focus,
 div[is="site-spider-div"] .table a:hover {
     text-decoration: underline !important;
 }
-div[is="site-spider-div"] .table tr[class*="status"]:nth-child(even) {
-    background-color: #2b2b2b;
+div[is="site-spider-div"] [data-search-terms] {
+    background-color: var(--spider-dark-md);
+    font-family: monospace;
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    width: max-content;
+    margin: 0.5rem auto 0 auto;
 }
-div[is="site-spider-div"] .table tr[class*="status"]:nth-child(odd) {
-    background-color: #424242;
+div[is="site-spider-div"] [data-search-terms]:empty {
+    display: none;
 }
 
 /*  styles that apply to the page  */

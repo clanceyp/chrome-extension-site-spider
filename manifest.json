@@ -1,5 +1,5 @@
 {
-  "version": "1.0.3",
+  "version": "1.0.5",
   "manifest_version": 3,
   "name": "Source Code Searcher",
   "short_name": "Site Spider",
@@ -15,11 +15,11 @@
   ],
   "options_page": "options/index.html",
   "icons": {
-	"48": "/lib/i/48.png",
-    "128": "/lib/i/128.png"
+	"48": "/lib/i/48-2.png",
+    "128": "/lib/i/128-2.png"
   },
   "action": {
-    "default_icon" : "/lib/i/48.png",
-    "default_title": "Linked Page Source Code Searcher"
+    "default_icon" : "/lib/i/48-2.png",
+    "default_title": "Linked Page Source Searcher v1.0.5"
   }
 }

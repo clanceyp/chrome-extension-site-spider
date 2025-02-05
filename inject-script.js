@@ -2,6 +2,7 @@ function init(settings) {
     console.log(settings)
     const id = "site-spider-results";
     const cleanUp = () => {
+        currentLinks.length = 0;
         document.getElementById(id).remove();
         document.querySelectorAll("[data-spider-status]")
             .forEach(element => {
@@ -9,6 +10,7 @@ function init(settings) {
                 element.removeAttribute("data-spider-match");
             });
     }
+    const currentLinks = [];
     if (document.getElementById(id)) {
         cleanUp();
         return;
@@ -16,8 +18,17 @@ function init(settings) {
     const maxCheckLength = -1;
     const isContentSearch = settings.requestType.toLowerCase() === "get" && settings.searchTerms.length;
     let count = 0;
+    const headerHTML = `<h2 class="m-null txt-c p-null">
+        Site Spider
+        <svg data-pause aria-label="Pause" xmlns="http://www.w3.org/2000/svg" width="40" height="40" preserveAspectRatio="none" viewBox="0 0 490 490">
+            <title>Pause</title>
+            <path fill="none" stroke="#aaaaaa" stroke-width="36" 
+                stroke-linecap="round" d="m280,278a153,153 0 1,0-2,2l170,170m-91-117 110,110-26,26-110-110"/>
+        </svg>
+    </h2>`
     const links = document.querySelectorAll("a[href]");
     let siteSpiderResultsElement;
+    let isPaused = false;
     const linksArray = [];
     const getLinkLabel = (el) => {
         if ( el.getAttribute("aria-label") ) {
@@ -85,13 +96,12 @@ function init(settings) {
 
     }
     function getRowHTML(anchor) {
-        return `<tr class="status--${ anchor.status } content-match--${ anchor.contentMatch }" data-sort="${ anchor.sort }">
-    <td>
+        return `<li class="status--${ anchor.status } content-match--${ anchor.contentMatch }" data-sort="${ anchor.sort }">
         <a href="${ anchor.href }" target="_blank" title="${ anchor.href }" class="block">
-            <span class="spider-status">${ anchor.status }</span> ${ anchor.pathname }
+            <span class="spider-status">${ anchor.status }</span> 
+            <span class="pathname">${ anchor.pathname }</span><span class="search">${ anchor.search }</span>
         </a>
-    </td>
-</tr>`;
+    </li>`;
     }
     function getAllTableRows() {
         let rows = "";
@@ -102,24 +112,29 @@ function init(settings) {
     }
     function addTableRow(anchor) {
         const main = siteSpiderResultsElement.querySelector("main");
-        siteSpiderResultsElement.querySelector(".table tbody")
+        siteSpiderResultsElement.querySelector(".content-container")
             .insertAdjacentHTML("beforeend", getRowHTML(anchor));
-        main.scrollTop = main.scrollHeight;
+        if (!isPaused) {
+            main.scrollTop = main.scrollHeight;
+        }
     }
-    function getDefaultContent() {
-        return `<header class="m-null py-medium">
-    <h2 class="m-null txt-c p-null">Site Spider</h2>
+    function getDefaultContentHTML() {
+        return `<button aria-label="close" data-action-clean-up></button><header class="m-null py-medium">
+    ${ headerHTML }
     <div class="m-null p-medium txt-c">
-        Links total ${ linksArray.length }. 
-        Checked <span data-validated>0</span>.
-        Request type <strong>${ settings.requestType }</strong>
+        Links total <strong class="mono">${ linksArray.length }</strong>. 
+        Request type <strong class="mono">${ settings.requestType }</strong>
+        ${ contentSearchTerms() }
+        <p class="m-medium">
+            <button data-action-validate-links class="p-xsmall">Search</button>
+        </p>
      </div>
 </header>`
     }
-    function setSiteSpiderResults() {
+    function setSiteSpiderResultsHTML() {
         siteSpiderResultsElement = document.createElement('div');
         siteSpiderResultsElement.id = id;
-        siteSpiderResultsElement.innerHTML = getDefaultContent();
+        siteSpiderResultsElement.innerHTML = getDefaultContentHTML();
         // TODO: add polyfill for customElements.define() Not yet implemented in chrome extensions
         siteSpiderResultsElement.setAttribute("is", "site-spider-div")
         document.querySelector("body").appendChild(siteSpiderResultsElement);
@@ -169,6 +184,7 @@ function init(settings) {
                     label: getLinkLabel( link ),
                     href: link.href,
                     pathname: ops.url.pathname,
+                    search: ops.url.search,
                     status: 0,
                     contentMatch: 0,
                     validated: false,
@@ -180,37 +196,34 @@ function init(settings) {
             link.setAttribute("data-spider-status", ops.message || "");
         });
     }
-    function getContent() {
-        const contentSearchStatus = () => {
-            if (!isContentSearch) {
-                return "";
-            }
-            return `Content <strong data-content-match>0</strong>`
+    function contentSearchTerms(){
+        return `<div data-search-terms>${ settings.searchTerms.join(", ").replace('<','&lt;') }</div>`;
+    }
+    function contentSearchStatus(){
+        if (!isContentSearch) {
+            return "";
         }
+        return `Content <strong data-content-match>0</strong>`
+    }
+    function getContent() {
         return `
+<button aria-label="close" data-action-clean-up></button>
 <header class="m-null py-medium">
-    <h2 class="m-null txt-c p-null">
-        Site Spider
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" preserveAspectRatio="none" viewBox="0 0 490 490">
-            <path fill="none" stroke="#aaaaaa" stroke-width="36" 
-                stroke-linecap="round" d="m280,278a153,153 0 1,0-2,2l170,170m-91-117 110,110-26,26-110-110"/>
-        </svg>
-    </h2>
+    ${ headerHTML }
     <div class="m-null p-medium txt-c">
-        Links total ${ linksArray.length }. 
-        Checked <span data-validated>0</span>.
-        Method <span>${ settings.requestType }</span>.
-        ${ contentSearchStatus() }
+         <div>
+            Links total <strong class="mono">${ linksArray.length }</strong>. 
+            Checked <strong class="mono" data-validated>0</strong>.
+            Method <span>${ settings.requestType }</span>.
+            ${ contentSearchStatus() }
+        </div>
+        ${ contentSearchTerms() }
      </div>
 </header>
 <main class="mx-medium">
-    <table class="table">
-        <tbody>
-            <tr>
-                <td><div class="block">Checking links <strong data-validated>0</strong></div></td>
-            </tr>
-        </tbody>
-    </table>
+    <section class="table">
+        <ul class="content-container"></ul>
+    </section>
 </main>`;
     }
     function updateValidatedCount() {
@@ -227,7 +240,7 @@ function init(settings) {
             addTableRow( link );
             updateValidatedCount();
         } else {
-            siteSpiderResultsElement.querySelector(".table tbody").innerHTML = getAllTableRows();
+            siteSpiderResultsElement.querySelector(".content-container").innerHTML = getAllTableRows();
             updateValidatedCount();
             siteSpiderResultsElement.querySelector("main").scrollTop = 0;
         }
@@ -236,7 +249,7 @@ function init(settings) {
     async function validateLink() {
         const link = linksArray.find(link => !link.validated);
 
-        if (link) {
+        if (link && !isPaused) {
             link.validated = true;
             try {
                 fetch(link.href, {
@@ -273,6 +286,9 @@ function init(settings) {
             validationChange();
             return false;
         }
+        if (isPaused) {
+            console.log("currently not processing more links");
+        }
     }
     function validateAllLinks() {
         setTimeout(() => {
@@ -282,10 +298,39 @@ function init(settings) {
             }
         }, 10);
     }
+    function applyEventListeners() {
+        siteSpiderResultsElement?.addEventListener("click", (e) => {
+            if (e.target.matches("[data-pause]")) {
+                if (isPaused) {
+                    isPaused = false;
+                    validateAllLinks();
+                } else {
+                    isPaused = true;
+                }
+                siteSpiderResultsElement.querySelectorAll("[data-pause]").forEach(el => {
+                    const m = isPaused ? "Continue" : "Pause";
+                    el.setAttribute("aria-label", m);
+                    el.querySelector("title").textContent = m;
+                })
+            }
+            if (e.target.matches("[data-action-clean-up]")) {
+                cleanUp();
+            }
+            if (e.target.matches("[data-action-validate-links]")) {
+                validateAllLinks();
+            }
+        });
+        document.addEventListener("keyup", e => {
+            if (e.key === "Escape") {
+                init({});
+            }
+        }, {once: true})
+    }
 
     populateLinksArray();
-    setSiteSpiderResults();
-    validateAllLinks();
+    setSiteSpiderResultsHTML();
+    applyEventListeners();
+    // validateAllLinks();
 }
 
 
