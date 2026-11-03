@@ -57,20 +57,21 @@ function init(settings) {
             document.removeEventListener('mouseup', stopDrag, false);
         }
 
-        const dragHandle = element.querySelector('h2');
-        if (dragHandle) {
-            dragHandle.addEventListener('mousedown', function(e) {
-                e.preventDefault();
-                element.classList.add("spider-dragging");
-                initX = element.offsetLeft;
-                initY = element.offsetTop;
-                firstX = e.pageX;
-                firstY = e.pageY;
+        element.addEventListener('mousedown', function(e) {
+            if (!e.target.closest('h2')) {
+                return;
+            }
+            e.preventDefault();
+            element.classList.add("spider-dragging");
+            const rect = element.getBoundingClientRect();
+            initX = rect.left;
+            initY = rect.top;
+            firstX = e.pageX;
+            firstY = e.pageY;
 
-                document.addEventListener('mousemove', dragIt, false);
-                document.addEventListener('mouseup', stopDrag, false);
-            }, false);
-        }
+            document.addEventListener('mousemove', dragIt, false);
+            document.addEventListener('mouseup', stopDrag, false);
+        }, false);
 
         // TODO test and enable if it works ok
         // function swipeIt(e) {
