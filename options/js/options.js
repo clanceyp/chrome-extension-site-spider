@@ -241,9 +241,9 @@ function makeInput(item, type, section){
         }
         rowHTML = `<fieldset class="uk-fieldset"><legend class="uk-legend">${ item.label}</legend><div>${ getOptions() }</div></fieldset>`;
     }
-    return `<div style="position: relative;">
-    <button class="help-button" id="help-button-${ item.id }" aria-label="Show help"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 30 30" role="presentation"><use href="#Help" /></svg></button>
-    <div id="help-${ item.id }" class="help">${ item.help }</div>
+    return `<div>
+    <button class="help-button" popovertarget="help-${ item.id }" aria-label="Show help"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 30 30" role="presentation"><use href="#Help" /></svg></button>
+    <div id="help-${ item.id }" popover>${ item.help }</div>
     ${ rowHTML }
 </div>`;
 }
