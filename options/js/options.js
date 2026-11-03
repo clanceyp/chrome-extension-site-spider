@@ -242,9 +242,8 @@ function makeInput(item, type, section){
         rowHTML = `<fieldset class="uk-fieldset"><legend class="uk-legend">${ item.label}</legend><div>${ getOptions() }</div></fieldset>`;
     }
     return `<div>
-    <button class="help-button" popovertarget="help-${ item.id }" aria-label="Show help"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 30 30" role="presentation"><use href="#Help" /></svg></button>
-    <div id="help-${ item.id }" popover>${ item.help }</div>
     ${ rowHTML }
+    <small class="help-text">${ item.help }</small>
 </div>`;
 }
 function generateFormContent(section) {
@@ -388,11 +387,6 @@ function formUpdate(e) {
     // delegate events
     const target = e.target;
 
-    // Ignore help button clicks - they use native popover API
-    if (target.matches('.help-button') || target.closest('.help-button')) {
-        return;
-    }
-
     if (target === saveRawInputButton) {
         eventUtils.saveSettingsFromTextInput(e);
     }
@@ -450,12 +444,7 @@ function addEventListeners() {
     settingsForm.addEventListener("click", formUpdate);
     settingsForm.addEventListener("submit", e => e.preventDefault());
 
-    document.documentElement.addEventListener("mousedown", (e) => {
-        // Don't enable drag for help buttons
-        if (!e.target.matches('.help-button') && !e.target.closest('.help-button')) {
-            draggable.enable(e);
-        }
-    })
+    document.documentElement.addEventListener("mousedown", draggable.enable)
     document.documentElement.addEventListener("dragstart", draggable.dragstart);
     document.documentElement.addEventListener("dragend", draggable.dragend);
     document.documentElement.addEventListener("dragend", debounce((e) => updateSectionData(e)));
