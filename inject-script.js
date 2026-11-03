@@ -7,6 +7,7 @@ function init(settings) {
             .forEach(element => {
                 element.removeAttribute("data-spider-status");
                 element.removeAttribute("data-spider-match");
+                element.removeAttribute("title");
             });
     }
     if (document.getElementById(id)) {
@@ -177,7 +178,11 @@ function init(settings) {
                 })
                 count = count + 1;
             }
-            link.setAttribute("data-spider-status", ops.message || "");
+            const statusMessage = ops.message || "";
+            link.setAttribute("data-spider-status", statusMessage);
+            if (statusMessage) {
+                link.setAttribute("title", statusMessage);
+            }
         });
     }
     function getContent() {
@@ -211,7 +216,13 @@ function init(settings) {
             </tr>
         </tbody>
     </table>
-</main>`;
+</main>
+<footer>
+    <div class="m-null p-medium txt-c">
+        <span class="status--200 content-match--true p-vsmall">Content Match: true</span>
+    </div>
+</footer>
+`;
     }
     function updateValidatedCount() {
         const validatedLinksCount = linksArray.filter((element) => element.validated ).length;
@@ -244,6 +255,9 @@ function init(settings) {
                 }).then(response => {
                     link.status = response.status;
                     link.element.setAttribute("data-spider-status", link.status);
+                    if (link.status !== 200) {
+                        link.element.setAttribute("title", link.status);
+                    }
                     return response.text();
                 }).then(text => {
                     if (settings.requestType.toLowerCase() === "get") {
@@ -262,6 +276,8 @@ function init(settings) {
             } catch (error) {
                 // TypeError: Failed to fetch
                 link.status = "NaN";
+                link.element.setAttribute("data-spider-status", link.status);
+                link.element.setAttribute("title", link.status);
                 console.error(error)
                 validationChange();
                 await validateLink();
