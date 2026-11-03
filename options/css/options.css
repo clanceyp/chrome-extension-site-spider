@@ -257,12 +257,13 @@ svg path {
         top: 50%;
         transform: translateY(-50%);
         margin-right: 10px;
+        transition: opacity 0.2s ease;
         white-space: normal;
         width: max-content;
         z-index: 1000;
     }
-    button:focus + .help,
-    button:hover + .help {
+    .help-button:focus ~ .help,
+    .help-button:hover ~ .help {
         opacity: 1;
     }
 
