@@ -112,6 +112,15 @@ input[type="image"]:hover {
     margin: 0;
     padding: 0;
     width: 30px;
+    color: #666;
+}
+.help-button:hover,
+.help-button:focus {
+    color: #000;
+}
+.help-button svg {
+    width: 100%;
+    height: 100%;
 }
 .uk-icon-button.uk-icon-button--delete {
     background-color: transparent;
@@ -237,15 +246,20 @@ svg path {
         color: white;
         font-family: system-ui, sans-serif;
         font-size: 1rem;
-        inset-area: center left;
         line-height: 1.3;
-        margin: 14px;
         max-width: 380px;
         opacity: 0;
         padding: 1.2rem 1.4rem;
         pointer-events: none;
         position: absolute;
+        right: 100%;
         text-wrap: balance;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-right: 10px;
+        white-space: normal;
+        width: max-content;
+        z-index: 1000;
     }
     button:focus + .help,
     button:hover + .help {
@@ -270,12 +284,18 @@ svg path {
     }
 
     .help.help--top {
-        inset-area: top center;
+        bottom: 100%;
+        right: auto;
+        top: auto;
+        transform: none;
+        margin-bottom: 10px;
+        margin-right: 0;
     }
 
     .help.help--top::before {
         bottom: -14px;
         clip-path: polygon(0% 0%, 50% 50%, 100% 0%);
+        right: 20px;
         top: unset;
     }
 }
