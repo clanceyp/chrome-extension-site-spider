@@ -103,15 +103,12 @@ input[type="image"]:hover {
 .test-url--matches-false span {
     color: #a3a3a3;
 }
-.help-button {
-    background-color: transparent;
-    border: 0 none;
-    cursor: pointer;
-    float: right;
-    height: 30px;
-    margin: 0;
-    padding: 0;
-    width: 30px;
+.help-text {
+    color: var(--grey-medium);
+    display: block;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    line-height: 1.4;
 }
 .uk-icon-button.uk-icon-button--delete {
     background-color: transparent;
@@ -227,55 +224,4 @@ input[type="image"]:hover {
 svg path {
     fill: none;
     stroke: rgb(102, 102, 102);
-}
-
-@layer help {
-    .help {
-        background-color: var(--grey-dark-md);
-        border-radius: 0.5rem;
-        filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
-        color: white;
-        font-family: system-ui, sans-serif;
-        font-size: 1rem;
-        inset-area: center left;
-        line-height: 1.3;
-        margin: 14px;
-        max-width: 380px;
-        opacity: 0;
-        padding: 1.2rem 1.4rem;
-        pointer-events: none;
-        position: absolute;
-        text-wrap: balance;
-    }
-    button:focus + .help,
-    button:hover + .help {
-        opacity: 1;
-    }
-
-    .help::before {
-        background-color: inherit;
-        clip-path: polygon(0% 0%, 50% 50%, 0% 100%) ;
-        content: "";
-        display: block;
-        height: 14px;
-        right: -13px;
-        position: absolute;
-        top: calc(50% - 7px);
-        width: 14px;
-    }
-
-    .help.help--warning {
-        background-color: yellow;
-        color: black;
-    }
-
-    .help.help--top {
-        inset-area: top center;
-    }
-
-    .help.help--top::before {
-        bottom: -14px;
-        clip-path: polygon(0% 0%, 50% 50%, 100% 0%);
-        top: unset;
-    }
 }

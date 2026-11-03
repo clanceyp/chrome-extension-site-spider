@@ -289,13 +289,50 @@ function init(settings) {
 }
 
 
+// Default settings fallback
+const defaultSettings = {
+    concurrentRequests: 1,
+    requestType: "GET",
+    ignoreList: ["logout"],
+    searchTerms: [],
+    ignoreHash: true
+};
+
+function parseSettings(settingsString) {
+    try {
+        const parsed = JSON.parse(settingsString);
+        const settings = parsed[0];
+        if (!settings || !settings.data) {
+            console.warn("Site Spider: Invalid settings structure, using defaults");
+            return defaultSettings;
+        }
+
+        return {
+            concurrentRequests: parseInt(settings.data.find(item => item.key === "concurrentRequests")?.value) || defaultSettings.concurrentRequests,
+            requestType: settings.data.find(item => item.key === "preferredRequestType")?.value || defaultSettings.requestType,
+            ignoreList: settings.data.find(item => item.key === "ignoreList")?.value?.split(/\r?\n|\r|\n/g) || defaultSettings.ignoreList,
+            searchTerms: settings.data.find(item => item.key === "searchTerms")?.value?.split(/\r?\n|\r|\n/g) || defaultSettings.searchTerms,
+            ignoreHash: settings.data.find(item => item.key === "ignoreHash")?.value === "true"
+        };
+    } catch (error) {
+        console.error("Site Spider: Error parsing settings, using defaults", error);
+        return defaultSettings;
+    }
+}
+
 chrome.storage.local.get(["settings"]).then(result => {
-    const settings = JSON.parse(result.settings)[0];
-    init({
-            "concurrentRequests": parseInt(settings.data.find( item => item.key === "concurrentRequests")?.value),
-            "requestType": settings.data.find( item => item.key === "preferredRequestType")?.value,
-            "ignoreList": settings.data.find( item => item.key === "ignoreList")?.value?.split(/\r?\n|\r|\n/g) || [],
-            "searchTerms": settings.data.find( item => item.key === "searchTerms")?.value?.split(/\r?\n|\r|\n/g) || [],
-            "ignoreHash": settings.data.find( item => item.key === "ignoreHash")?.value === "true"
-        });
+    console.log("Site Spider: Retrieved settings from storage", result);
+
+    if (!result.settings) {
+        console.warn("Site Spider: No settings found in storage, using defaults");
+        init(defaultSettings);
+        return;
+    }
+
+    const settings = parseSettings(result.settings);
+    console.log("Site Spider: Using settings", settings);
+    init(settings);
+}).catch(error => {
+    console.error("Site Spider: Error retrieving settings from storage, using defaults", error);
+    init(defaultSettings);
 });
