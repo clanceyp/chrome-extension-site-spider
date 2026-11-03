@@ -51,6 +51,12 @@ function init(settings) {
             element.style.top = `${ initY + e.pageY-firstY }px`;
         }
 
+        function stopDrag() {
+            element.classList.remove("spider-dragging");
+            document.removeEventListener('mousemove', dragIt, false);
+            document.removeEventListener('mouseup', stopDrag, false);
+        }
+
         const dragHandle = element.querySelector('h2');
         if (dragHandle) {
             dragHandle.addEventListener('mousedown', function(e) {
@@ -62,11 +68,7 @@ function init(settings) {
                 firstY = e.pageY;
 
                 document.addEventListener('mousemove', dragIt, false);
-                document.addEventListener('mouseup', function() {
-                    element.classList.remove("spider-dragging");
-                    document.removeEventListener('mousemove', dragIt, false);
-                }, false);
-
+                document.addEventListener('mouseup', stopDrag, false);
             }, false);
         }
 
