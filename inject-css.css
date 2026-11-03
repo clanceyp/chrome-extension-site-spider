@@ -24,7 +24,7 @@ div[is="site-spider-div"] {
 div[is="site-spider-div"].spider-dragging {
     opacity: 0.7;
 }
-div[is="site-spider-div"] header {
+div[is="site-spider-div"] h2 {
     cursor: move;
 }
 div[is="site-spider-div"] h2 {

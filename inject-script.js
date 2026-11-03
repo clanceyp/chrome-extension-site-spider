@@ -47,25 +47,28 @@ function init(settings) {
         let firstY;
 
         function dragIt(e) {
-            this.style.left = `${ initX + e.pageX-firstX }px` ;
-            this.style.top = `${ initY + e.pageY-firstY }px`;
+            element.style.left = `${ initX + e.pageX-firstX }px` ;
+            element.style.top = `${ initY + e.pageY-firstY }px`;
         }
 
-        element.addEventListener('mousedown', function(e) {
-            e.preventDefault();
-            element.classList.add("spider-dragging");
-            initX = this.offsetLeft;
-            initY = this.offsetTop;
-            firstX = e.pageX;
-            firstY = e.pageY;
+        const dragHandle = element.querySelector('h2');
+        if (dragHandle) {
+            dragHandle.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                element.classList.add("spider-dragging");
+                initX = element.offsetLeft;
+                initY = element.offsetTop;
+                firstX = e.pageX;
+                firstY = e.pageY;
 
-            this.addEventListener('mousemove', dragIt, false);
-            document.addEventListener('mouseup', function() {
-                element.classList.remove("spider-dragging");
-                element.removeEventListener('mousemove', dragIt, false);
+                document.addEventListener('mousemove', dragIt, false);
+                document.addEventListener('mouseup', function() {
+                    element.classList.remove("spider-dragging");
+                    document.removeEventListener('mousemove', dragIt, false);
+                }, false);
+
             }, false);
-
-        }, false);
+        }
 
         // TODO test and enable if it works ok
         // function swipeIt(e) {
