@@ -14,7 +14,7 @@ div[is="site-spider-div"] {
     /* font-family: sans-serif !important; inherit from the parent site */
     font-size: .8rem !important;
     left: 20px;
-    padding: 20px 0 40px 0 !important;
+    padding: 20px 0 10px 0 !important;
     position: fixed !important;
     transition: opacity 300ms;
     top: 20px;
@@ -58,6 +58,9 @@ div[is="site-spider-div"] .m-null {
 }
 div[is="site-spider-div"] .p-null {
     padding: 0 !important;
+}
+div[is="site-spider-div"] .p-vsmall {
+    padding: 4px !important;
 }
 div[is="site-spider-div"] .p-small {
     padding: 8px !important;
@@ -141,6 +144,7 @@ div[is="site-spider-div"] .table tr[class*="status--200"] .spider-status {
     background-color: green !important;
     color: white !important;
 }
+div[is="site-spider-div"] [class*="status--200"][class*="content-match--true"],
 div[is="site-spider-div"] .table tr[class*="status--200"][class*="content-match--true"],
 div[is="site-spider-div"] .table tr[class*="status--200"][class*="content-match--true"] * {
     background-color: gold !important;

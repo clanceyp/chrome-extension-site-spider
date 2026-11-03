@@ -7,7 +7,14 @@ function init(settings) {
             .forEach(element => {
                 element.removeAttribute("data-spider-status");
                 element.removeAttribute("data-spider-match");
-                element.removeAttribute("title");
+                // Restore original title if it existed
+                const originalTitle = element.getAttribute("data-original-title");
+                if (originalTitle !== null) {
+                    element.setAttribute("title", originalTitle);
+                    element.removeAttribute("data-original-title");
+                } else {
+                    element.removeAttribute("title");
+                }
             });
     }
     if (document.getElementById(id)) {
@@ -181,6 +188,10 @@ function init(settings) {
             const statusMessage = ops.message || "";
             link.setAttribute("data-spider-status", statusMessage);
             if (statusMessage) {
+                // Save original title if it exists
+                if (link.hasAttribute("title") && !link.hasAttribute("data-original-title")) {
+                    link.setAttribute("data-original-title", link.getAttribute("title"));
+                }
                 link.setAttribute("title", statusMessage);
             }
         });
@@ -256,6 +267,10 @@ function init(settings) {
                     link.status = response.status;
                     link.element.setAttribute("data-spider-status", link.status);
                     if (link.status !== 200) {
+                        // Save original title if it exists and hasn't been saved yet
+                        if (link.element.hasAttribute("title") && !link.element.hasAttribute("data-original-title")) {
+                            link.element.setAttribute("data-original-title", link.element.getAttribute("title"));
+                        }
                         link.element.setAttribute("title", link.status);
                     }
                     return response.text();
@@ -277,6 +292,10 @@ function init(settings) {
                 // TypeError: Failed to fetch
                 link.status = "NaN";
                 link.element.setAttribute("data-spider-status", link.status);
+                // Save original title if it exists and hasn't been saved yet
+                if (link.element.hasAttribute("title") && !link.element.hasAttribute("data-original-title")) {
+                    link.element.setAttribute("data-original-title", link.element.getAttribute("title"));
+                }
                 link.element.setAttribute("title", link.status);
                 console.error(error)
                 validationChange();
