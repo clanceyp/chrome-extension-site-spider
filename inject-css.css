@@ -10,11 +10,12 @@ div[is="site-spider-div"] {
     border-radius: 6px !important;
     box-shadow: -5px 5px 15px black !important;
     color: white !important;
+    cursor: default;
     display: block !important;
     /* font-family: sans-serif !important; inherit from the parent site */
     font-size: .8rem !important;
     left: 20px;
-    padding: 20px 0 40px 0 !important;
+    padding: 20px 0 10px 0 !important;
     position: fixed !important;
     transition: opacity 300ms;
     top: 20px;
@@ -24,12 +25,10 @@ div[is="site-spider-div"] {
 div[is="site-spider-div"].spider-dragging {
     opacity: 0.7;
 }
-div[is="site-spider-div"] header {
-    cursor: move;
-}
 div[is="site-spider-div"] h2 {
     border: 0 none !important;
     color: inherit !important;
+    cursor: move;
     font-size: 2rem !important;
     line-height: 2.5rem !important;
     letter-spacing: 0.1rem !important;
@@ -58,6 +57,9 @@ div[is="site-spider-div"] .m-null {
 }
 div[is="site-spider-div"] .p-null {
     padding: 0 !important;
+}
+div[is="site-spider-div"] .p-vsmall {
+    padding: 4px !important;
 }
 div[is="site-spider-div"] .p-small {
     padding: 8px !important;
@@ -141,6 +143,7 @@ div[is="site-spider-div"] .table tr[class*="status--200"] .spider-status {
     background-color: green !important;
     color: white !important;
 }
+div[is="site-spider-div"] [class*="status--200"][class*="content-match--true"],
 div[is="site-spider-div"] .table tr[class*="status--200"][class*="content-match--true"],
 div[is="site-spider-div"] .table tr[class*="status--200"][class*="content-match--true"] * {
     background-color: gold !important;

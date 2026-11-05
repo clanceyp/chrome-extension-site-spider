@@ -7,6 +7,14 @@ function init(settings) {
             .forEach(element => {
                 element.removeAttribute("data-spider-status");
                 element.removeAttribute("data-spider-match");
+                // Restore original title if it existed
+                const originalTitle = element.getAttribute("data-original-title");
+                if (originalTitle !== null) {
+                    element.setAttribute("title", originalTitle);
+                    element.removeAttribute("data-original-title");
+                } else {
+                    element.removeAttribute("title");
+                }
             });
     }
     if (document.getElementById(id)) {
@@ -39,24 +47,30 @@ function init(settings) {
         let firstY;
 
         function dragIt(e) {
-            this.style.left = `${ initX + e.pageX-firstX }px` ;
-            this.style.top = `${ initY + e.pageY-firstY }px`;
+            element.style.left = `${ initX + e.pageX-firstX }px` ;
+            element.style.top = `${ initY + e.pageY-firstY }px`;
+        }
+
+        function stopDrag() {
+            element.classList.remove("spider-dragging");
+            document.removeEventListener('mousemove', dragIt, false);
+            document.removeEventListener('mouseup', stopDrag, false);
         }
 
         element.addEventListener('mousedown', function(e) {
+            if (!e.target.closest('h2')) {
+                return;
+            }
             e.preventDefault();
             element.classList.add("spider-dragging");
-            initX = this.offsetLeft;
-            initY = this.offsetTop;
+            const rect = element.getBoundingClientRect();
+            initX = rect.left;
+            initY = rect.top;
             firstX = e.pageX;
             firstY = e.pageY;
 
-            this.addEventListener('mousemove', dragIt, false);
-            document.addEventListener('mouseup', function() {
-                element.classList.remove("spider-dragging");
-                element.removeEventListener('mousemove', dragIt, false);
-            }, false);
-
+            document.addEventListener('mousemove', dragIt, false);
+            document.addEventListener('mouseup', stopDrag, false);
         }, false);
 
         // TODO test and enable if it works ok
@@ -177,7 +191,15 @@ function init(settings) {
                 })
                 count = count + 1;
             }
-            link.setAttribute("data-spider-status", ops.message || "");
+            const statusMessage = ops.message || "";
+            link.setAttribute("data-spider-status", statusMessage);
+            if (statusMessage) {
+                // Save original title if it exists
+                if (link.hasAttribute("title") && !link.hasAttribute("data-original-title")) {
+                    link.setAttribute("data-original-title", link.getAttribute("title"));
+                }
+                link.setAttribute("title", statusMessage);
+            }
         });
     }
     function getContent() {
@@ -211,7 +233,13 @@ function init(settings) {
             </tr>
         </tbody>
     </table>
-</main>`;
+</main>
+<footer>
+    <div class="m-null p-medium txt-c">
+        <span class="status--200 content-match--true p-vsmall">Content Match: true</span>
+    </div>
+</footer>
+`;
     }
     function updateValidatedCount() {
         const validatedLinksCount = linksArray.filter((element) => element.validated ).length;
@@ -244,6 +272,13 @@ function init(settings) {
                 }).then(response => {
                     link.status = response.status;
                     link.element.setAttribute("data-spider-status", link.status);
+                    if (link.status !== 200) {
+                        // Save original title if it exists and hasn't been saved yet
+                        if (link.element.hasAttribute("title") && !link.element.hasAttribute("data-original-title")) {
+                            link.element.setAttribute("data-original-title", link.element.getAttribute("title"));
+                        }
+                        link.element.setAttribute("title", link.status);
+                    }
                     return response.text();
                 }).then(text => {
                     if (settings.requestType.toLowerCase() === "get") {
@@ -262,6 +297,12 @@ function init(settings) {
             } catch (error) {
                 // TypeError: Failed to fetch
                 link.status = "NaN";
+                link.element.setAttribute("data-spider-status", link.status);
+                // Save original title if it exists and hasn't been saved yet
+                if (link.element.hasAttribute("title") && !link.element.hasAttribute("data-original-title")) {
+                    link.element.setAttribute("data-original-title", link.element.getAttribute("title"));
+                }
+                link.element.setAttribute("title", link.status);
                 console.error(error)
                 validationChange();
                 await validateLink();
