@@ -51,6 +51,50 @@ div[is="site-spider-div"] main {
     scrollbar-color: var(--spider-medium) var(--spider-dark-md) !important;
     scrollbar-width: thin !important;
 }
+/* search form */
+div[is="site-spider-div"] .spider-search {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 340px !important;
+}
+div[is="site-spider-div"] .spider-label {
+    color: inherit !important;
+    font-size: .8rem !important;
+}
+div[is="site-spider-div"] .spider-textarea {
+    background-color: var(--spider-dark-md) !important;
+    border: 1px solid var(--spider-medium) !important;
+    border-radius: 4px !important;
+    box-sizing: border-box !important;
+    color: white !important;
+    font-family: monospace !important;
+    font-size: .8rem !important;
+    padding: 8px !important;
+    resize: vertical !important;
+    width: 100% !important;
+}
+div[is="site-spider-div"] .spider-textarea:disabled {
+    opacity: 0.5;
+}
+div[is="site-spider-div"] .spider-help {
+    color: #aaaaaa !important;
+    font-size: .7rem !important;
+}
+div[is="site-spider-div"] .spider-button {
+    align-self: flex-end !important;
+    background-color: green !important;
+    border: 0 none !important;
+    border-radius: 4px !important;
+    color: white !important;
+    cursor: pointer !important;
+    font-size: .8rem !important;
+    padding: 6px 20px !important;
+}
+div[is="site-spider-div"] .spider-button:hover,
+div[is="site-spider-div"] .spider-button:focus-visible {
+    background-color: #1a9c1a !important;
+}
 /* utils */
 div[is="site-spider-div"] .m-null {
     margin: 0 !important;
